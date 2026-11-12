@@ -7,6 +7,7 @@ What value could a researcher actually have known on a historical decision date 
 For a requested field and decision date t, the snapshot keeps records satisfying both effective_at <= t and available_at <= t. For each symbol it selects the latest (effective_at, available_at) pair. This bitemporal rule prevents a later publication or restatement from leaking into an earlier decision.
 
 ## Assumptions and limitations
+- This synthetic example is illustrative and does not demonstrate real-world investment performance.
 - Inputs must be plain calendar dates at daily granularity; intraday release times, time zones, and exchange calendars are not modeled.
 - Conflicting values with the same symbol, field, effective date, and availability date are rejected instead of making the answer depend on input order.
 - The demo uses hand-authored synthetic values with an explicit later revision. They are not prices or real company fundamentals.
