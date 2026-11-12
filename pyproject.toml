@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "point-in-time-market-data"
+version = "0.1.0"
+description = "Leakage-aware point-in-time snapshots from synthetic revisioned data."
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = ["matplotlib>=3.8,<4"]
+
+[project.optional-dependencies]
+test = ["pytest>=8,<10", "ruff>=0.8,<1"]
+
+[project.scripts]
+pit-demo = "point_in_time_market_data.experiment:main"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+addopts = "-ra -p no:cacheprovider"
+
