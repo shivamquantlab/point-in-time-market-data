@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, datetime
 
 import pytest
 
@@ -23,4 +23,27 @@ def test_empty_snapshot_and_field_filter():
 def test_invalid_publication_order_is_rejected():
     with pytest.raises(ValueError, match="cannot precede"):
         PointInTimeRecord("SYN", "sales", date(2025, 2, 2), date(2025, 2, 1), 1)
+
+
+def test_same_point_in_time_key_cannot_select_conflicting_values_by_input_order():
+    available = date(2025, 2, 1)
+    first = PointInTimeRecord("SYN", "sales", date(2025, 1, 31), available, 10)
+    conflicting = PointInTimeRecord("SYN", "sales", date(2025, 1, 31), available, 11)
+    with pytest.raises(ValueError, match="conflicting values"):
+        snapshot([first, conflicting], as_of=date(2025, 2, 2), field="sales")
+
+
+def test_datetime_is_rejected_in_daily_date_fields():
+    with pytest.raises(ValueError, match="calendar dates"):
+        PointInTimeRecord(
+            "SYN", "sales", datetime(2025, 1, 31), date(2025, 2, 1), 10
+        )
+
+
+def test_snapshot_rejects_datetime_as_of_and_blank_field():
+    row = PointInTimeRecord("SYN", "sales", date(2025, 1, 31), date(2025, 2, 1), 10)
+    with pytest.raises(ValueError, match="as_of"):
+        snapshot([row], as_of=datetime(2025, 2, 2), field="sales")
+    with pytest.raises(ValueError, match="field"):
+        snapshot([row], as_of=date(2025, 2, 2), field=" ")
 
